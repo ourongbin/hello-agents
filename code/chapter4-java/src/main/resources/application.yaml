@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: hello-agents
+  ai:
+    openai:
+      api-key: ${LLM_API_KEY}
+      base-url: ${LLM_BASE_URL:https://api.openai.com}
+      chat:
+        options:
+          model: ${LLM_MODEL_ID}
