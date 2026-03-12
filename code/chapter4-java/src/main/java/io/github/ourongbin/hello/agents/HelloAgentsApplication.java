@@ -7,12 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
-import java.util.Map;
-
-@SpringBootApplication(exclude = {
-		org.springframework.ai.model.openai.autoconfigure.OpenAiChatAutoConfiguration.class
-})
+@SpringBootApplication
 public class HelloAgentsApplication {
 
 	private static final Logger log = LoggerFactory.getLogger(HelloAgentsApplication.class);
@@ -22,19 +17,11 @@ public class HelloAgentsApplication {
 	}
 
 	@Bean
-	public CommandLineRunner run(HelloAgentsLLM llmClient) {
+	public CommandLineRunner run() {
 		return args -> {
-			List<Map<String, String>> exampleMessages = List.of(
-					Map.of("role", "system", "content", "You are a helpful assistant that writes Java code."),
-					Map.of("role", "user", "content", "用 Java 写一个快速排序算法")
-			);
 
-			log.info("--- 调用LLM ---");
-			String responseText = llmClient.think(exampleMessages);
-			if (responseText != null && !responseText.isEmpty()) {
-				log.info("\n\n--- 完整模型响应 ---");
-				log.info("{}", responseText);
-			}
+			log.info("--- HelloAgentsApplication ---");
+
 		};
 	}
 

@@ -103,6 +103,7 @@ public class HelloAgentsLLM {
                     .model(this.model)
                     .temperature(temperature)
                     .maxTokens(8192) // 显式设置较大的 maxTokens，防止模型因默认限制提前结束
+                    .stop(List.of("Observation:", "Observation:\n")) // 添加 stop sequences，防止模型自己生成 Observation
                     .build();
 
             Prompt prompt = new Prompt(springMessages, options);
@@ -122,16 +123,16 @@ public class HelloAgentsLLM {
                             if (reasoning != null) {
                                 String reasoningText = reasoning.toString();
                                 if (!reasoningText.isEmpty()) {
-                                    System.out.print(reasoningText);
-                                    System.out.flush();
+//                                    System.out.print(reasoningText);
+//                                    System.out.flush();
                                     collectedContent.append(reasoningText);
                                 }
                             }
                             // 2. 同时收集正式 content（非 Thinking 模型或 Thinking 结束后的最终回答）
                             String text = generation.getOutput().getText();
                             if (text != null && !text.isEmpty()) {
-                                System.out.print(text);
-                                System.out.flush();
+//                                System.out.print(text);
+//                                System.out.flush();
                                 collectedContent.append(text);
                             }
                         }
@@ -170,5 +171,20 @@ public class HelloAgentsLLM {
             }
         }
         return result;
+    }
+
+    public static void main(String[] args) {
+        HelloAgentsLLM llmClient = new HelloAgentsLLM(System.getenv("LLM_API_KEY"), System.getenv("LLM_BASE_URL"), System.getenv("LLM_MODEL_ID"));
+        List<Map<String, String>> exampleMessages = List.of(
+                Map.of("role", "system", "content", "You are a helpful assistant that writes Java code."),
+                Map.of("role", "user", "content", "用 Java 写一个快速排序算法")
+        );
+
+        log.info("--- 调用LLM ---");
+        String responseText = llmClient.think(exampleMessages);
+        if (responseText != null && !responseText.isEmpty()) {
+//            log.info("\n\n--- 完整模型响应 ---");
+//            log.info("{}", responseText);
+        }
     }
 }
