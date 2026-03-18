@@ -85,7 +85,7 @@ public class ReActAgent {
             messages.add(Map.of("role", "user", "content", prompt));
 
             String responseText = this.llmClient.think(messages);
-            log.info(">>>>>>>>>>> 调用LLM >>>>>> \n messages: {} \n\n responseText: {}", messages, responseText);
+//            log.info(">>>>>>>>>>> 调用LLM >>>>>> \n messages: {} \n\n responseText: {}", messages, responseText);
             if (responseText == null || responseText.isEmpty()) {
                 System.out.println("错误：LLM未能返回有效响应。");
                 break;

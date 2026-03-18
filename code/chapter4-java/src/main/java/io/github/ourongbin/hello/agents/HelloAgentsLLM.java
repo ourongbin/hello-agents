@@ -109,25 +109,25 @@ public class HelloAgentsLLM {
             Prompt prompt = new Prompt(springMessages, options);
 
             // 处理流式响应
-            log.info("✅ 大语言模型响应成功:");
             StringBuilder collectedContent = new StringBuilder();
 
             Flux<ChatResponse> responseFlux = chatModel.stream(prompt);
             // 使用 doOnNext + blockLast 代替 toStream()，避免 Reactor 线程死锁
+            log.info("✅ 大语言模型响应成功:");
             responseFlux.doOnNext(chunk ->
                     {
                         for (var generation : chunk.getResults()) {
                             // 1. 优先尝试从 metadata 中获取 reasoningContent（Thinking 模型思考内容）
-                            var metadata = generation.getOutput().getMetadata();
-                            Object reasoning = metadata.get("reasoningContent");
-                            if (reasoning != null) {
-                                String reasoningText = reasoning.toString();
-                                if (!reasoningText.isEmpty()) {
-//                                    System.out.print(reasoningText);
-//                                    System.out.flush();
-                                    collectedContent.append(reasoningText);
-                                }
-                            }
+//                            var metadata = generation.getOutput().getMetadata();
+//                            Object reasoning = metadata.get("reasoningContent");
+//                            if (reasoning != null) {
+//                                String reasoningText = reasoning.toString();
+//                                if (!reasoningText.isEmpty()) {
+////                                    System.out.print(reasoningText);
+////                                    System.out.flush();
+//                                    collectedContent.append(reasoningText);
+//                                }
+//                            }
                             // 2. 同时收集正式 content（非 Thinking 模型或 Thinking 结束后的最终回答）
                             String text = generation.getOutput().getText();
                             if (text != null && !text.isEmpty()) {
